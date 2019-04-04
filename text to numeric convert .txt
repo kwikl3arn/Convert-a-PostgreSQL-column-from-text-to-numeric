@@ -1,0 +1,27 @@
+1)So we can write a function that checks whether a string is entirely numeric, and if not, convert it to null: 
+A)
+
+CREATE OR REPLACE FUNCTION pc_chartoint(chartoconvert character varying)
+  
+RETURNS integer AS
+  
+$BODY$
+  
+SELECT CASE WHEN trim($1) SIMILAR TO '[0-9]+'
+  
+THEN CAST(trim($1) AS integer) ELSE NULL END;
+  
+$BODY$
+  
+LANGUAGE 'sql'
+  
+IMMUTABLE STRICT;
+
+------------------------------------------------------------------------------------------------------------------------------
+2)If we run the above code to create the function pc_chartoint(), then we can adapt our ALTER TABLE syntax as follows:
+A)
+
+ALTER TABLE table ALTER COLUMN column TYPE integer USING pc_chartoint(column);
+
+eg:
+ALTER TABLE requisition_issue_return ALTER COLUMN requir_totamount TYPE numeric USING pc_chartoint(requir_totamount);
